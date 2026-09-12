@@ -6,17 +6,58 @@ import streamlit.components.v1 as components
 st.set_page_config(page_title="💱為替レート変換アプリ",page_icon="為替",layout="wide")
 st.title("💱為替レート変換アプリ")
 st.write("最新の為替レートを使って通貨を変換できます。")
+currency_names={
+    "AED":"UAEディルハム",
+    "AUD":"豪ドル",
+    "BGN":"ブルガリア・レフ",
+    "BRL":"ブラジル・レアル",
+    "CAD":"カナダドル",
+    "CHF":"スイスフラン",
+    "CNY":"中国人民元",
+    "CZK":"チェコ・コルナ",
+    "DKK":"デンマーク・クローネ",
+    "EUR":"ユーロ",
+    "GBP":"イギリスポンド",
+    "HKD":"香港ドル",
+    "HUF":"ハンガリー・フォリント",
+    "IDR":"インドネシア・ルピア",
+    "ILS":"イスラエル・シェケル",
+    "INR":"インド・ルピー",
+    "ISK":"アイスランド・クローナ",
+    "JPY":"日本円",
+    "KRW":"韓国ウォン",
+    "MXN":"メキシコ・ペソ",
+    "MYR":"マレーシア・リンギット",
+    "NOK":"ノルウェー・クローネ",
+    "NZD":"ニュージーランドドル",
+    "PHP":"フィリピン・ペソ",
+    "PLN":"ポーランド・ズウォティ",
+    "RON":"ルーマニア・レウ",
+    "SEK":"スウェーデン・クローナ",
+    "SGD":"シンガポールドル",
+    "THB":"タイ・バーツ",
+    "TRY":"トルコ・リラ",
+    "USD":"米ドル",
+    "ZAR":"南アフリカ・ランド"
+}
 currencies={}
 try:
     currency_response=requests.get("https://api.frankfurter.app/currencies",timeout=10)
     if currency_response.status_code==200:
-        currencies=currency_response.json()
+        api_currencies=currency_response.json()
+        for code,name in api_currencies.items():
+            japanese_name=currency_names.get(code,name)
+            currencies[f"{japanese_name} ({code})"]=code
     else:
         st.error("通貨一覧を取得できませんでした。")
 except requests.exceptions.RequestException:
     st.error("通貨一覧を取得できませんでした。")
 if not currencies:
-    currencies={"日本円":"JPY","米ドル":"USD","ユーロ":"EUR"}
+    currencies={
+        "日本円 (JPY)":"JPY",
+        "米ドル (USD)":"USD",
+        "ユーロ (EUR)":"EUR"
+    }
 clock_placeholder=st.empty()
 st.subheader("現在時刻")
 components.html("""
