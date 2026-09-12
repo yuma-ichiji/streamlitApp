@@ -222,6 +222,7 @@ def show_exchange_data():
         st.error("過去の為替データを取得できませんでした。")
     except Exception as e:
         st.error(f"データの処理中にエラーが発生しました: {e}")
+show_exchange_data()
 st.divider()
 st.subheader("このアプリについて")
 st.write(
@@ -232,4 +233,3 @@ st.caption(
     "為替レートは変動するため、"
     "実際の銀行や両替所のレートとは異なる場合があります。"
 )
-show_exchange_data()
