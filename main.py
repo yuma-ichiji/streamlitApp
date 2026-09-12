@@ -39,9 +39,26 @@ currencies={
 }
 st.subheader("現在時刻")
 clock_placeholder=st.empty()
-now=datetime.now()
-clock_placeholder.markdown(f"# {now.strftime('%Y年%m月%d日 %H:%M:%S')}")
-st.subheader("自動更新")
+st.subheader("現在時刻")
+components.html("""
+<div style="text-align:center;font-size:40px;font-weight:bold;">
+<div id="clock"></div>
+</div>
+<script>
+function updateClock(){
+    const now=new Date();
+    const year=now.getFullYear();
+    const month=String(now.getMonth()+1).padStart(2,"0");
+    const day=String(now.getDate()).padStart(2,"0");
+    const hours=String(now.getHours()).padStart(2,"0");
+    const minutes=String(now.getMinutes()).padStart(2,"0");
+    const seconds=String(now.getSeconds()).padStart(2,"0");
+    document.getElementById("clock").textContent=year+"年"+month+"月"+day+"日 "+hours+":"+minutes+":"+seconds;
+}
+updateClock();
+setInterval(updateClock,1000);
+</script>
+""",height=70)
 auto_refresh=st.checkbox("自動更新する",value=True)
 refresh_seconds=st.selectbox("更新間隔",[10,30,60,120,300,600],index=0,format_func=lambda x:f"{x}秒")
 if auto_refresh:
