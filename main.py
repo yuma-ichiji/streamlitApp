@@ -106,8 +106,8 @@ if st.button("変換する",use_container_width=True):
             st.error("APIに接続できませんでした。インターネット接続を確認してください。")
 st.divider()
 st.subheader("為替レートのグラフ")
-period=st.selectbox("グラフの期間",["7日","30日","90日","365日"])
-days={"7日":7,"30日":30,"90日":90,"365日":365}[period]
+period=st.selectbox("グラフの期間",["一週間","一ヶ月","三ヶ月","十二ヶ月"])
+days={"一週間":7,"一ヶ月":30,"三ヶ月":90,"十二ヶ月":365}[period]
 start_date=datetime.now()-timedelta(days=days)
 end_date=datetime.now()
 try:
