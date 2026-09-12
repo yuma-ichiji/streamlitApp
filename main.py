@@ -3,8 +3,8 @@ import requests
 import pandas as pd
 from datetime import datetime,timedelta
 import streamlit.components.v1 as components
-st.set_page_config(page_title="💱為替レート変換アプリ",page_icon="為替",layout="wide")
-st.title("💱為替レート変換アプリ")
+st.set_page_config(page_title="💱 為替レート変換アプリ",page_icon="💱",layout="wide")
+st.title("💱 為替レート変換アプリ")
 st.write("最新の為替レートを使って通貨を変換できます。")
 currency_names={
     "AED":"UAEディルハム",
@@ -45,9 +45,15 @@ try:
     currency_response=requests.get("https://api.frankfurter.app/currencies",timeout=10)
     if currency_response.status_code==200:
         api_currencies=currency_response.json()
+        preferred_codes=["JPY","USD"]
+        for code in preferred_codes:
+            if code in api_currencies:
+                japanese_name=currency_names.get(code,api_currencies[code])
+                currencies[f"{japanese_name} ({code})"]=code
         for code,name in api_currencies.items():
-            japanese_name=currency_names.get(code,name)
-            currencies[f"{japanese_name} ({code})"]=code
+            if code not in preferred_codes:
+                japanese_name=currency_names.get(code,name)
+                currencies[f"{japanese_name} ({code})"]=code
     else:
         st.error("通貨一覧を取得できませんでした。")
 except requests.exceptions.RequestException:
