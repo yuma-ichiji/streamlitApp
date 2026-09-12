@@ -62,7 +62,7 @@ auto_refresh = st.checkbox(
 if auto_refresh:
     refresh_seconds = st.selectbox(
         "更新間隔",
-        [30, 60, 120, 300],
+        [10,30,60,120,300,600],
         format_func=lambda x: f"{x}秒"
     )
     st.info(
