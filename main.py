@@ -3,8 +3,8 @@ import requests
 import pandas as pd
 from datetime import datetime,timedelta
 import streamlit.components.v1 as components
-st.set_page_config(page_title="💱 為替レート変換アプリ",page_icon="💱",layout="wide")
-st.title("💱 為替レート変換アプリ")
+st.set_page_config(page_title="為替レート変換アプリ",page_icon="💱",layout="wide")
+st.title("為替レート変換アプリ")
 st.write("最新の為替レートを使って通貨を変換できます。")
 currency_names={
     "AED":"UAEディルハム - UAE Dirham",
@@ -59,7 +59,11 @@ try:
 except requests.exceptions.RequestException:
     st.error("通貨一覧を取得できませんでした。")
 if not currencies:
-    currencies={"日本円 (JPY)":"JPY","米ドル (USD)":"USD","ユーロ (EUR)":"EUR"}
+    currencies={
+        "日本円 - Japanese Yen (JPY)":"JPY",
+        "米ドル - US Dollar (USD)":"USD",
+        "ユーロ - Euro (EUR)":"EUR"
+    }
 st.subheader("現在時刻")
 components.html("""
 <div style="text-align:center;font-size:40px;font-weight:bold;">
