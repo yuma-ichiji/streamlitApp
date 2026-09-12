@@ -1,2 +1,3 @@
 import streamlit as st
-st.title("あああああああ")
+st.title(".......")
+st.write(".......")
