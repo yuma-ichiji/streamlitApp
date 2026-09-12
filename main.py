@@ -3,8 +3,8 @@ import requests
 import pandas as pd
 from datetime import datetime,timedelta
 import streamlit.components.v1 as components
-st.set_page_config(page_title="為替レート変換アプリ",page_icon="為替",layout="wide")
-st.title("為替レート変換アプリ")
+st.set_page_config(page_title="💱為替レート変換アプリ",page_icon="為替",layout="wide")
+st.title("💱為替レート変換アプリ")
 st.write("最新の為替レートを使って通貨を変換できます。")
 currencies={
     "日本円 (JPY)":"JPY",
