@@ -247,16 +247,34 @@ if st.button("レートを確認する",use_container_width=True):
                 current_rate=None
         if current_rate is not None:
             st.info(f"現在のレート: 1 {from_currency} = {current_rate:.6f} {to_currency}")
+            alert_triggered=False
             if alert_condition=="以上になったら":
                 if current_rate>=alert_rate:
+                    alert_triggered=True
                     st.success(f"目標レートの{alert_rate:.6f} {to_currency}以上になりました。")
                 else:
                     st.warning(f"まだ目標レートの{alert_rate:.6f} {to_currency}以上ではありません。")
             else:
                 if current_rate<=alert_rate:
+                    alert_triggered=True
                     st.success(f"目標レートの{alert_rate:.6f} {to_currency}以下になりました。")
                 else:
                     st.warning(f"まだ目標レートの{alert_rate:.6f} {to_currency}以下ではありません。")
+            if alert_triggered:
+                components.html("""
+<script>
+const audioContext=new(window.AudioContext||window.webkitAudioContext)();
+const oscillator=audioContext.createOscillator();
+const gainNode=audioContext.createGain();
+oscillator.type="sine";
+oscillator.frequency.setValueAtTime(880,audioContext.currentTime);
+gainNode.gain.setValueAtTime(0.3,audioContext.currentTime);
+oscillator.connect(gainNode);
+gainNode.connect(audioContext.destination);
+oscillator.start();
+oscillator.stop(audioContext.currentTime+0.7);
+</script>
+""",height=0)
     except requests.exceptions.RequestException:
         st.error("APIに接続できませんでした。")
 st.divider()
