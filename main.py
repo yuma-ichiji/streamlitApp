@@ -81,6 +81,8 @@ setInterval(updateClock,1000);
 """,height=70)
 auto_refresh=st.checkbox("自動更新する",value=False)
 refresh_seconds=st.selectbox("更新間隔",[10,30,60,120,300,600],index=0,format_func=lambda x:f"{x}秒")
+if st.button("更新",use_container_width=True):
+    st.rerun()
 if auto_refresh:
     components.html(f"""
     <script>
