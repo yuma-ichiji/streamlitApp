@@ -37,7 +37,6 @@ currencies={
     "サウジアラビア・リヤル (SAR)":"SAR",
     "イスラエル・シェケル (ILS)":"ILS"
 }
-st.subheader("現在時刻")
 clock_placeholder=st.empty()
 st.subheader("現在時刻")
 components.html("""
