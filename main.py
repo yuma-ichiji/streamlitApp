@@ -97,11 +97,19 @@ if st.session_state.auto_refresh:
     st.write(f"{refresh_seconds}秒ごとに為替情報を更新します。")
 st.divider()
 st.subheader("通貨変換")
+currency_list=list(currencies.keys())
+if "from_currency" not in st.session_state:
+    st.session_state.from_currency=currency_list[0]
+if "to_currency" not in st.session_state:
+    st.session_state.to_currency=currency_list[min(1,len(currency_list)-1)]
+if st.button("通貨を入れ替える",use_container_width=True):
+    st.session_state.from_currency,st.session_state.to_currency=st.session_state.to_currency,st.session_state.from_currency
+    st.rerun()
 col1,col2=st.columns(2)
 with col1:
-    from_name=st.selectbox("変換元の通貨",list(currencies.keys()),index=0,key="from_currency")
+    from_name=st.selectbox("変換元の通貨",currency_list,index=currency_list.index(st.session_state.from_currency),key="from_currency")
 with col2:
-    to_name=st.selectbox("変換先の通貨",list(currencies.keys()),index=min(1,len(currencies)-1),key="to_currency")
+    to_name=st.selectbox("変換先の通貨",currency_list,index=currency_list.index(st.session_state.to_currency),key="to_currency")
 amount=st.number_input("金額",min_value=0.0,value=1000.0,step=100.0)
 from_currency=currencies[from_name]
 to_currency=currencies[to_name]
@@ -131,6 +139,30 @@ if st.button("変換する",use_container_width=True):
                 st.error("為替レートの取得に失敗しました。")
         except requests.exceptions.RequestException:
             st.error("APIに接続できませんでした。インターネット接続を確認してください。")
+st.divider()
+st.subheader("電卓")
+calc_col1,calc_col2=st.columns(2)
+with calc_col1:
+    calc_a=st.number_input("計算する数値1",value=0.0,key="calc_a")
+with calc_col2:
+    calc_b=st.number_input("計算する数値2",value=0.0,key="calc_b")
+operation=st.selectbox("計算方法",["足し算","引き算","掛け算","割り算"],key="calc_operation")
+if st.button("計算する",use_container_width=True):
+    if operation=="足し算":
+        calc_result=calc_a+calc_b
+        st.success(f"計算結果: {calc_result:,.2f}")
+    elif operation=="引き算":
+        calc_result=calc_a-calc_b
+        st.success(f"計算結果: {calc_result:,.2f}")
+    elif operation=="掛け算":
+        calc_result=calc_a*calc_b
+        st.success(f"計算結果: {calc_result:,.2f}")
+    elif operation=="割り算":
+        if calc_b==0:
+            st.error("0で割ることはできません。")
+        else:
+            calc_result=calc_a/calc_b
+            st.success(f"計算結果: {calc_result:,.2f}")
 st.divider()
 st.subheader("為替レートのグラフ")
 period=st.selectbox("グラフの期間",["7日","30日","90日","365日"],index=1)
