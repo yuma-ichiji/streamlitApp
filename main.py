@@ -216,51 +216,17 @@ def show_exchange_data():
             display_data.columns=["為替レート"]
             st.dataframe(display_data,use_container_width=True)
             st.caption(f"1 {from_currency} = {latest_rate:.6f} {to_currency}")
-        else:
-            st.warning("この通貨の過去の為替データを取得できませんでした。")
-    except requests.exceptions.RequestException:
-        st.error("過去の為替データを取得できませんでした。")
-    except Exception as e:
-        st.error(f"データの処理中にエラーが発生しました: {e}")
-show_exchange_data()
-st.divider()
-st.subheader("レートアラート")
-alert_rate=st.number_input("目標レート",min_value=0.000001,value=150.0,step=0.1)
-alert_condition=st.selectbox("アラート条件",["以上になったら","以下になったら"])
-if st.button("レートを確認する",use_container_width=True):
-    try:
-        if from_currency==to_currency:
-            current_rate=1.0
-        else:
-            alert_url=f"https://api.frankfurter.app/latest?from={from_currency}&to={to_currency}"
-            alert_response=requests.get(alert_url,timeout=10)
-            if alert_response.status_code==200:
-                alert_data=alert_response.json()
-                alert_rates=alert_data.get("rates",{})
-                if to_currency in alert_rates:
-                    current_rate=alert_rates[to_currency]
-                else:
-                    st.error("選択した通貨のレートを取得できませんでした。")
-                    current_rate=None
-            else:
-                st.error("為替レートの取得に失敗しました。")
-                current_rate=None
-        if current_rate is not None:
-            st.info(f"現在のレート: 1 {from_currency} = {current_rate:.6f} {to_currency}")
+            st.divider()
+            st.subheader("レートアラート")
+            alert_rate=st.number_input("目標レート",min_value=0.000001,value=150.0,step=0.1,key="alert_rate")
+            alert_condition=st.selectbox("アラート条件",["以上になったら","以下になったら"],key="alert_condition")
             alert_triggered=False
-            if alert_condition=="以上になったら":
-                if current_rate>=alert_rate:
-                    alert_triggered=True
-                    st.success(f"目標レートの{alert_rate:.6f} {to_currency}以上になりました。")
-                else:
-                    st.warning(f"まだ目標レートの{alert_rate:.6f} {to_currency}以上ではありません。")
-            else:
-                if current_rate<=alert_rate:
-                    alert_triggered=True
-                    st.success(f"目標レートの{alert_rate:.6f} {to_currency}以下になりました。")
-                else:
-                    st.warning(f"まだ目標レートの{alert_rate:.6f} {to_currency}以下ではありません。")
+            if alert_condition=="以上になったら" and latest_rate>=alert_rate:
+                alert_triggered=True
+            elif alert_condition=="以下になったら" and latest_rate<=alert_rate:
+                alert_triggered=True
             if alert_triggered:
+                st.success(f"目標レートを達成しました。現在のレート: {latest_rate:.6f} {to_currency}")
                 components.html("""
 <script>
 const audioContext=new(window.AudioContext||window.webkitAudioContext)();
@@ -275,8 +241,15 @@ oscillator.start();
 oscillator.stop(audioContext.currentTime+0.7);
 </script>
 """,height=0)
+            else:
+                st.info(f"目標レート未達成。現在のレート: {latest_rate:.6f} {to_currency}")
+        else:
+            st.warning("この通貨の過去の為替データを取得できませんでした。")
     except requests.exceptions.RequestException:
-        st.error("APIに接続できませんでした。")
+        st.error("過去の為替データを取得できませんでした。")
+    except Exception as e:
+        st.error(f"データの処理中にエラーが発生しました: {e}")
+show_exchange_data()
 st.divider()
 st.subheader("このアプリについて")
 st.write(
