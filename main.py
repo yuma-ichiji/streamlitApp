@@ -224,6 +224,42 @@ def show_exchange_data():
         st.error(f"データの処理中にエラーが発生しました: {e}")
 show_exchange_data()
 st.divider()
+st.subheader("レートアラート")
+alert_rate=st.number_input("目標レート",min_value=0.000001,value=150.0,step=0.1)
+alert_condition=st.selectbox("アラート条件",["以上になったら","以下になったら"])
+if st.button("レートを確認する",use_container_width=True):
+    try:
+        if from_currency==to_currency:
+            current_rate=1.0
+        else:
+            alert_url=f"https://api.frankfurter.app/latest?from={from_currency}&to={to_currency}"
+            alert_response=requests.get(alert_url,timeout=10)
+            if alert_response.status_code==200:
+                alert_data=alert_response.json()
+                alert_rates=alert_data.get("rates",{})
+                if to_currency in alert_rates:
+                    current_rate=alert_rates[to_currency]
+                else:
+                    st.error("選択した通貨のレートを取得できませんでした。")
+                    current_rate=None
+            else:
+                st.error("為替レートの取得に失敗しました。")
+                current_rate=None
+        if current_rate is not None:
+            st.info(f"現在のレート: 1 {from_currency} = {current_rate:.6f} {to_currency}")
+            if alert_condition=="以上になったら":
+                if current_rate>=alert_rate:
+                    st.success(f"目標レートの{alert_rate:.6f} {to_currency}以上になりました。")
+                else:
+                    st.warning(f"まだ目標レートの{alert_rate:.6f} {to_currency}以上ではありません。")
+            else:
+                if current_rate<=alert_rate:
+                    st.success(f"目標レートの{alert_rate:.6f} {to_currency}以下になりました。")
+                else:
+                    st.warning(f"まだ目標レートの{alert_rate:.6f} {to_currency}以下ではありません。")
+    except requests.exceptions.RequestException:
+        st.error("APIに接続できませんでした。")
+st.divider()
 st.subheader("このアプリについて")
 st.write(
     "このアプリはFrankfurter APIを利用して"
