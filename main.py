@@ -6,37 +6,17 @@ import streamlit.components.v1 as components
 st.set_page_config(page_title="💱為替レート変換アプリ",page_icon="為替",layout="wide")
 st.title("💱為替レート変換アプリ")
 st.write("最新の為替レートを使って通貨を変換できます。")
-currencies={
-    "日本円 (JPY)":"JPY",
-    "米ドル (USD)":"USD",
-    "ユーロ (EUR)":"EUR",
-    "イギリスポンド (GBP)":"GBP",
-    "中国人民元 (CNY)":"CNY",
-    "韓国ウォン (KRW)":"KRW",
-    "豪ドル (AUD)":"AUD",
-    "カナダドル (CAD)":"CAD",
-    "スイスフラン (CHF)":"CHF",
-    "シンガポールドル (SGD)":"SGD",
-    "インド・ルピー (INR)":"INR",
-    "ニュージーランドドル (NZD)":"NZD",
-    "香港ドル (HKD)":"HKD",
-    "タイ・バーツ (THB)":"THB",
-    "マレーシア・リンギット (MYR)":"MYR",
-    "インドネシア・ルピア (IDR)":"IDR",
-    "フィリピン・ペソ (PHP)":"PHP",
-    "ベトナム・ドン (VND)":"VND",
-    "ブラジル・レアル (BRL)":"BRL",
-    "メキシコ・ペソ (MXN)":"MXN",
-    "南アフリカ・ランド (ZAR)":"ZAR",
-    "ノルウェー・クローネ (NOK)":"NOK",
-    "スウェーデン・クローナ (SEK)":"SEK",
-    "デンマーク・クローネ (DKK)":"DKK",
-    "ポーランド・ズウォティ (PLN)":"PLN",
-    "トルコ・リラ (TRY)":"TRY",
-    "UAEディルハム (AED)":"AED",
-    "サウジアラビア・リヤル (SAR)":"SAR",
-    "イスラエル・シェケル (ILS)":"ILS"
-}
+currencies={}
+try:
+    currency_response=requests.get("https://api.frankfurter.app/currencies",timeout=10)
+    if currency_response.status_code==200:
+        currencies=currency_response.json()
+    else:
+        st.error("通貨一覧を取得できませんでした。")
+except requests.exceptions.RequestException:
+    st.error("通貨一覧を取得できませんでした。")
+if not currencies:
+    currencies={"日本円":"JPY","米ドル":"USD","ユーロ":"EUR"}
 clock_placeholder=st.empty()
 st.subheader("現在時刻")
 components.html("""
@@ -58,7 +38,7 @@ updateClock();
 setInterval(updateClock,1000);
 </script>
 """,height=70)
-auto_refresh=st.checkbox("自動更新する",value=True)
+auto_refresh=st.checkbox("自動更新する",value=False)
 refresh_seconds=st.selectbox("更新間隔",[10,30,60,120,300,600],index=0,format_func=lambda x:f"{x}秒")
 if auto_refresh:
     components.html(f"""
