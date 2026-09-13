@@ -201,7 +201,13 @@ def show_exchange_data():
             highest_rate=float(chart_data["レート"].max())
             lowest_rate=float(chart_data["レート"].min())
             average_rate=float(chart_data["レート"].mean())
-            col1,col2,col3,col4=st.columns(4)
+            first_rate=float(chart_data["レート"].iloc[0])
+            rate_change=latest_rate-first_rate
+            if first_rate!=0:
+                rate_change_percent=(rate_change/first_rate)*100
+            else:
+                rate_change_percent=0.0
+            col1,col2,col3,col4,col5=st.columns(5)
             with col1:
                 st.metric("最新レート",f"{latest_rate:.6f}")
             with col2:
@@ -210,6 +216,21 @@ def show_exchange_data():
                 st.metric("最低値",f"{lowest_rate:.6f}")
             with col4:
                 st.metric("平均値",f"{average_rate:.6f}")
+            with col5:
+                st.metric("レートの変化",f"{rate_change_percent:+.2f}%",delta=f"{rate_change:+.6f}")
+            st.subheader("レートの変化")
+            change_col1,change_col2,change_col3=st.columns(3)
+            with change_col1:
+                st.metric("期間開始時",f"{first_rate:.6f}")
+            with change_col2:
+                st.metric("現在",f"{latest_rate:.6f}")
+            with change_col3:
+                if rate_change_percent>0:
+                    st.success(f"レート上昇: +{rate_change_percent:.2f}%")
+                elif rate_change_percent<0:
+                    st.error(f"レート下降: {rate_change_percent:.2f}%")
+                else:
+                    st.info("レート変化なし: 0.00%")
             st.subheader("為替レートのデータ")
             display_data=chart_data.copy()
             display_data.index=display_data.index.strftime("%Y年%m月%d日")
