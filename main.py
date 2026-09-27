@@ -321,4 +321,4 @@ with tab3:
     st.write("このアプリはFrankfurter APIを利用して為替レートを取得しています。")
     st.caption("為替レートは変動するため、実際の銀行や両替所のレートとは異なる場合があります。")
     st.caption("このアプリは投資や取引の判断に使用しないでください。")
-st.markdown(':color[このアプリを利用した詐欺に注意してください]{foreground="#ff0000"}')
+    st.markdown(':color[このアプリを利用した詐欺に注意してください]{foreground="#ff0000"}')
