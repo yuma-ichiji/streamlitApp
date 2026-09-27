@@ -270,18 +270,18 @@ with tab2:
         calc_a=st.number_input("計算する数値1",value=0.0,key="calc_a")
     with calc_col2:
         calc_b=st.number_input("計算する数値2",value=0.0,key="calc_b")
-    operation=st.selectbox("計算方法",["足し算","引き算","掛け算","割り算"],key="calc_operation")
+    operation=st.selectbox("計算方法",["足し算(+)","引き算(-)","掛け算(×)","割り算(÷)"],key="calc_operation")
     if st.button("計算する",use_container_width=True):
-        if operation=="足し算":
+        if operation=="足し算(+)":
             calc_result=calc_a+calc_b
             st.success(f"計算結果: {calc_result:,.2f}")
-        elif operation=="引き算":
+        elif operation=="引き算(-)":
             calc_result=calc_a-calc_b
             st.success(f"計算結果: {calc_result:,.2f}")
-        elif operation=="掛け算":
+        elif operation=="掛け算(×)":
             calc_result=calc_a*calc_b
             st.success(f"計算結果: {calc_result:,.2f}")
-        elif operation=="割り算":
+        elif operation=="割り算(÷)":
             if calc_b==0:
                 st.error("0で割ることはできません。")
             else:
