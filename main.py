@@ -212,7 +212,12 @@ with tab1:
             st.dataframe(display_data,use_container_width=True,hide_index=True)
             st.divider()
             st.subheader("レートアラート")
-            alert_enabled=st.toggle("レートアラートを有効にする",key="alert_enabled")
+            if "alert_enabled" not in st.session_state:
+                st.session_state.alert_enabled=False
+            alert_enabled=st.toggle(
+                "レートアラートを無効にする" if st.session_state.alert_enabled else "レートアラートを有効にする",
+                key="alert_enabled"
+)
             if alert_enabled:
                 alert_rate=st.number_input(
                     "目標レート",
