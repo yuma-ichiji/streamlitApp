@@ -153,7 +153,6 @@ with tab1:
             result=data["rates"][to_code]
             now=datetime.now()
             st.success(f"{amount:,.2f} {from_code} = {result:,.6f} {to_code}")
-            # st.info(f"変換日時: {now.strftime('%Y年%m月%d日 %H:%M:%S')}")
         except Exception as e:
             st.error(f"為替レートの取得に失敗しました: {e}")
     st.divider()
