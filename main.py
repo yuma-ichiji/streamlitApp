@@ -161,8 +161,8 @@ with tab1:
         st.rerun()
     def show_exchange_data():
         st.subheader("為替レートのグラフ")
-        period=st.selectbox("グラフ期間",["7日","30日","90日","365日"],key="graph_period")
-        days={"7日":7,"30日":30,"90日":90,"365日":365}[period]
+        period=st.selectbox("グラフ期間",["7日","30日","90日","365日(1年)","1095日(3年)"],key="graph_period")
+        days={"7日":7,"30日":30,"90日":90,"365日(1年)":365,"1095日(3年)":1095}[period]
         end_date=datetime.now().date()
         start_date=end_date-timedelta(days=days)
         try:
