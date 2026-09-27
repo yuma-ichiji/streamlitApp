@@ -278,7 +278,7 @@ oscillator.stop(audioContext.currentTime+0.7);
                     st.info(f"目標レート未達成。現在のレート: {latest_rate:.6f} {to_code}")
             else:
                 st.session_state.alert_was_triggered=False
-                st.info("レートアラートは現在オフです。")
+                st.info("レートアラートは現在無効です。")
         except Exception as e:
             st.error(f"グラフデータの取得に失敗しました: {e}")
     show_exchange_data()
