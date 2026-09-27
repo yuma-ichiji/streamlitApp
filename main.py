@@ -65,6 +65,8 @@ if "to_currency" not in st.session_state:
     st.session_state.to_currency=currency_list[min(1,len(currency_list)-1)]
 if "auto_refresh" not in st.session_state:
     st.session_state.auto_refresh=False
+if "alert_enabled" not in st.session_state:
+    st.session_state.alert_enabled=False
 if "alert_was_triggered" not in st.session_state:
     st.session_state.alert_was_triggered=False
 components.html("""
@@ -78,8 +80,7 @@ function updateClock(){
     const h=String(now.getHours()).padStart(2,"0");
     const min=String(now.getMinutes()).padStart(2,"0");
     const s=String(now.getSeconds()).padStart(2,"0");
-    document.getElementById("clock").textContent=
-        y+"年"+m+"月"+d+"日 "+h+":"+min+":"+s;
+    document.getElementById("clock").textContent=y+"年"+m+"月"+d+"日 "+h+":"+min+":"+s;
 }
 updateClock();
 setInterval(updateClock,1000);
@@ -187,11 +188,7 @@ with tab1:
             with col4:
                 st.metric("平均値",f"{average_rate:.6f}")
             with col5:
-                st.metric(
-                    "レートの変化",
-                    f"{rate_change_percent:+.2f}%",
-                    delta=f"{rate_change:+.6f}"
-                )
+                st.metric("レートの変化",f"{rate_change_percent:+.2f}%",delta=f"{rate_change:+.6f}")
             st.line_chart(
                 chart_data.set_index("日付")["レート"],
                 use_container_width=True
@@ -215,27 +212,29 @@ with tab1:
             st.dataframe(display_data,use_container_width=True,hide_index=True)
             st.divider()
             st.subheader("レートアラート")
-            alert_rate=st.number_input(
-                "目標レート",
-                min_value=0.000001,
-                value=150.0,
-                step=0.1,
-                key="alert_rate"
-            )
-            alert_condition=st.selectbox(
-                "アラート条件",
-                ["以上になったら","以下になったら"],
-                key="alert_condition"
-            )
-            alert_triggered=False
-            if alert_condition=="以上になったら" and latest_rate>=alert_rate:
-                alert_triggered=True
-            elif alert_condition=="以下になったら" and latest_rate<=alert_rate:
-                alert_triggered=True
-            if alert_triggered:
-                st.success(f"目標レートを達成しました。現在のレート: {latest_rate:.6f} {to_code}")
-                if not st.session_state.alert_was_triggered:
-                    components.html("""
+            alert_enabled=st.toggle("レートアラートを有効にする",key="alert_enabled")
+            if alert_enabled:
+                alert_rate=st.number_input(
+                    "目標レート",
+                    min_value=0.000001,
+                    value=150.0,
+                    step=0.1,
+                    key="alert_rate"
+                )
+                alert_condition=st.selectbox(
+                    "アラート条件",
+                    ["以上になったら","以下になったら"],
+                    key="alert_condition"
+                )
+                alert_triggered=False
+                if alert_condition=="以上になったら" and latest_rate>=alert_rate:
+                    alert_triggered=True
+                elif alert_condition=="以下になったら" and latest_rate<=alert_rate:
+                    alert_triggered=True
+                if alert_triggered:
+                    st.success(f"目標レートを達成しました。現在のレート: {latest_rate:.6f} {to_code}")
+                    if not st.session_state.alert_was_triggered:
+                        components.html("""
 <script>
 const audioContext=new(window.AudioContext||window.webkitAudioContext)();
 const oscillator=audioContext.createOscillator();
@@ -249,10 +248,13 @@ oscillator.start();
 oscillator.stop(audioContext.currentTime+0.7);
 </script>
 """,height=0)
-                st.session_state.alert_was_triggered=True
+                    st.session_state.alert_was_triggered=True
+                else:
+                    st.session_state.alert_was_triggered=False
+                    st.info(f"目標レート未達成。現在のレート: {latest_rate:.6f} {to_code}")
             else:
                 st.session_state.alert_was_triggered=False
-                st.info(f"目標レート未達成。現在のレート: {latest_rate:.6f} {to_code}")
+                st.info("レートアラートは現在オフです。")
         except Exception as e:
             st.error(f"グラフデータの取得に失敗しました: {e}")
     show_exchange_data()
@@ -263,11 +265,7 @@ with tab2:
         calc_a=st.number_input("計算する数値1",value=0.0,key="calc_a")
     with calc_col2:
         calc_b=st.number_input("計算する数値2",value=0.0,key="calc_b")
-    operation=st.selectbox(
-        "計算方法",
-        ["足し算","引き算","掛け算","割り算"],
-        key="calc_operation"
-    )
+    operation=st.selectbox("計算方法",["足し算","引き算","掛け算","割り算"],key="calc_operation")
     if st.button("計算する",use_container_width=True):
         if operation=="足し算":
             calc_result=calc_a+calc_b
@@ -286,11 +284,5 @@ with tab2:
                 st.success(f"計算結果: {calc_result:,.2f}")
 with tab3:
     st.subheader("このアプリについて")
-    st.write(
-        "このアプリはFrankfurter APIを利用して"
-        "為替レートを取得しています。"
-    )
-    st.caption(
-        "為替レートは変動するため、"
-        "実際の銀行や両替所のレートとは異なる場合があります。"
-    )
+    st.write("このアプリはFrankfurter APIを利用して為替レートを取得しています。")
+    st.caption("為替レートは変動するため、実際の銀行や両替所のレートとは異なる場合があります。")
