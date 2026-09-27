@@ -158,27 +158,17 @@ with tab1:
             st.error(f"為替レートの取得に失敗しました: {e}")
     st.divider()
     st.subheader("更新設定")
-    st.divider()
+
     st.subheader("自動更新")
     if "auto_refresh" not in st.session_state:
         st.session_state.auto_refresh=False
     auto_refresh=st.checkbox("自動更新する",key="auto_refresh")
-    refresh_seconds=st.selectbox("更新間隔",[10,30,60,120,300,600],index=0,format_func=lambda x:f"{x}秒")
-    if st.button("更新",use_container_width=True):
-        st.rerun()
-    st.write(f"自動更新: {'オン' if st.session_state.auto_refresh else 'オフ'}")
-    if st.session_state.auto_refresh:
-        st.write(f"{refresh_seconds}秒ごとに為替情報を更新します。")
-    # st.subheader("自動更新")
-    # if "auto_refresh" not in st.session_state:
-    #     st.session_state.auto_refresh=False
-    # # auto_refresh=st.checkbox("自動更新する",key="auto_refresh")
-    # refresh_seconds=st.selectbox(
-    #     "更新間隔",
-    #     [10,30,60,120,300,600],
-    #     index=0,
-    #     format_func=lambda x:f"{x}秒"
-    # )
+    refresh_seconds=st.selectbox(
+        "更新間隔",
+        [10,30,60,120,300,600],
+        index=0,
+        format_func=lambda x:f"{x}秒"
+    )
     if st.button("更新",use_container_width=True):
         st.rerun()
     run_every=f"{refresh_seconds}s" if st.session_state.auto_refresh else None
