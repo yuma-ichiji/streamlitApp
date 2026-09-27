@@ -37,7 +37,36 @@ currency_names={
     "THB":"タイ・バーツ - Thai Baht",
     "TRY":"トルコ・リラ - Turkish Lira",
     "USD":"米ドル - US Dollar",
-    "ZAR":"南アフリカ・ランド - South African Rand"
+    "ZAR":"南アフリカ・ランド - South African Rand",
+    "BHD":"バーレーン・ディナール - Bahraini Dinar",
+    "CLP":"チリ・ペソ - Chilean Peso",
+    "COP":"コロンビア・ペソ - Colombian Peso",
+    "CRC":"コスタリカ・コロン - Costa Rican Colón",
+    "EGP":"エジプト・ポンド - Egyptian Pound",
+    "GEL":"ジョージア・ラリ - Georgian Lari",
+    "GTQ":"グアテマラ・ケツァル - Guatemalan Quetzal",
+    "ISK":"アイスランド・クローナ - Icelandic Króna",
+    "JOD":"ヨルダン・ディナール - Jordanian Dinar",
+    "KES":"ケニア・シリング - Kenyan Shilling",
+    "KWD":"クウェート・ディナール - Kuwaiti Dinar",
+    "MAD":"モロッコ・ディルハム - Moroccan Dirham",
+    "MDL":"モルドバ・レウ - Moldovan Leu",
+    "MUR":"モーリシャス・ルピー - Mauritian Rupee",
+    "NAD":"ナミビア・ドル - Namibian Dollar",
+    "NGN":"ナイジェリア・ナイラ - Nigerian Naira",
+    "OMR":"オマーン・リアル - Omani Rial",
+    "PEN":"ペルー・ソル - Peruvian Sol",
+    "PKR":"パキスタン・ルピー - Pakistani Rupee",
+    "QAR":"カタール・リヤル - Qatari Riyal",
+    "RSD":"セルビア・ディナール - Serbian Dinar",
+    "SAR":"サウジアラビア・リヤル - Saudi Riyal",
+    "THB":"タイ・バーツ - Thai Baht",
+    "TND":"チュニジア・ディナール - Tunisian Dinar",
+    "UGX":"ウガンダ・シリング - Ugandan Shilling",
+    "UYU":"ウルグアイ・ペソ - Uruguayan Peso",
+    "VES":"ベネズエラ・ボリバル - Venezuelan Bolívar",
+    "XOF":"CFAフラン - West African CFA Franc",
+    "ZMW":"ザンビア・クワチャ - Zambian Kwacha"
 }
 @st.cache_data(ttl=3600)
 def get_currencies():
@@ -292,6 +321,4 @@ with tab3:
     st.write("このアプリはFrankfurter APIを利用して為替レートを取得しています。")
     st.caption("為替レートは変動するため、実際の銀行や両替所のレートとは異なる場合があります。")
     st.caption("このアプリは投資や取引の判断に使用しないでください。")
-st.markdown(
-    ':color[このアプリを利用した詐欺に注意してください]{foreground="#ff0000"}'
-)
+st.markdown(':color[このアプリを利用した詐欺に注意してください]{foreground="#ff0000"}')
