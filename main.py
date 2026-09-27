@@ -152,25 +152,14 @@ with tab1:
             data=response.json()
             result=data["rates"][to_code]
             now=datetime.now()
-            st.success(f"{amount:,.2f} {from_code} = {result:,.6f} {to_code}")
-            st.info(f"変換日時: {now.strftime('%Y年%m月%d日 %H:%M:%S')}")
+            # st.success(f"{amount:,.2f} {from_code} = {result:,.6f} {to_code}")
+            # st.info(f"変換日時: {now.strftime('%Y年%m月%d日 %H:%M:%S')}")
         except Exception as e:
             st.error(f"為替レートの取得に失敗しました: {e}")
     st.divider()
-    # st.subheader("自動更新")
-    # if "auto_refresh" not in st.session_state:
-    #     st.session_state.auto_refresh=False
-    # auto_refresh=st.checkbox("自動更新する",key="auto_refresh")
-    # refresh_seconds=st.selectbox(
-    #     "更新間隔",
-    #     [10,30,60,120,300,600],
-    #     index=0,
-    #     format_func=lambda x:f"{x}秒"
-    # )
+    st.subheader("更新")
     if st.button("更新",use_container_width=True):
         st.rerun()
-    # run_every=f"{refresh_seconds}s" if st.session_state.auto_refresh else None
-    # @st.fragment(run_every=run_every)
     def show_exchange_data():
         st.subheader("為替レートのグラフ")
         period=st.selectbox("グラフ期間",["7日","30日","90日","365日"],key="graph_period")
