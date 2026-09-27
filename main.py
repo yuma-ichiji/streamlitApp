@@ -158,7 +158,10 @@ with tab1:
             st.error(f"為替レートの取得に失敗しました: {e}")
     st.divider()
     st.subheader("更新設定")
-    auto_refresh=st.checkbox("自動更新する",key="auto_refresh")
+    st.subheader("自動更新")
+    if "auto_refresh" not in st.session_state:
+        st.session_state.auto_refresh=False
+    # auto_refresh=st.checkbox("自動更新する",key="auto_refresh")
     refresh_seconds=st.selectbox(
         "更新間隔",
         [10,30,60,120,300,600],
